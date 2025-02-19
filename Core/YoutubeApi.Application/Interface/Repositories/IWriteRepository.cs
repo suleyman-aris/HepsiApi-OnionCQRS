@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YoutubeApi.Domain.Common;
+using YoutubeApi.Domain.Entities;
 
 namespace YoutubeApi.Application.Interface.Repositories
 {
@@ -13,5 +14,7 @@ namespace YoutubeApi.Application.Interface.Repositories
         Task AddRangeAsync(IList<T> entities);
         Task<T> UpdateAsync(T entity);
         Task HardDeleteAsync(T entity);
+        Task HardDeleteRangeAsync(IList<T> entity);
+        //Task HardDeleteRangeAsync(ProductCategory productCategories);
     }
 }

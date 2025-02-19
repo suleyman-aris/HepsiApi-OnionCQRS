@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YoutubeApi.Application.Interface.Repositories;
 using YoutubeApi.Domain.Common;
+using YoutubeApi.Domain.Entities;
 
 namespace YoutubeApi.Persistence.Repositories
 {
@@ -39,5 +40,15 @@ namespace YoutubeApi.Persistence.Repositories
         {
             await Task.Run(() => Table.Remove(entity));
         }
+
+        public async Task HardDeleteRangeAsync(IList<T> entity)
+        {
+            await Task.Run(() => Table.RemoveRange(entity));
+        }
+
+        //public async Task HardDeleteRangeAsync(ProductCategory productCategories)
+        //{
+        //    await Task.Run(() => Table.RemoveRange(entity));
+        //}
     }
 }

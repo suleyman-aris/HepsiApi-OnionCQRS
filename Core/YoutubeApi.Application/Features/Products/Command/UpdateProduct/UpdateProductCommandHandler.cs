@@ -1,16 +1,11 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using YoutubeApi.Application.Interface.AutoMapper;
 using YoutubeApi.Application.Interface.UnitOfWorks;
 using YoutubeApi.Domain.Entities;
 
 namespace YoutubeApi.Application.Features.Products.Command.UpdateProduct
 {
-    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommandRequest>
+    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommandRequest, Unit>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
@@ -20,7 +15,7 @@ namespace YoutubeApi.Application.Features.Products.Command.UpdateProduct
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public async Task Handle(UpdateProductCommandRequest request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateProductCommandRequest request, CancellationToken cancellationToken)
         {
             var product = await unitOfWork.GetReadRepository<Product>()
                 .GetAsync(x => x.Id == request.Id && !x.IsDeleted);
@@ -40,7 +35,9 @@ namespace YoutubeApi.Application.Features.Products.Command.UpdateProduct
 
             await unitOfWork.GetWriteRepository<Product>().UpdateAsync(map);
 
-            await unitOfWork.SaveAsync(); 
+            await unitOfWork.SaveAsync();
+
+            return Unit.Value;
         }
     }
 }

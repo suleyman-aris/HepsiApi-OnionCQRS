@@ -1,5 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using YoutubeApi.Application.DTO;
 using YoutubeApi.Application.Interface.AutoMapper;
 using YoutubeApi.Application.Interface.UnitOfWorks;
@@ -28,9 +33,9 @@ namespace YoutubeApi.Application.Features.Products.Queries.GetAllProduct
             foreach (var item in map)
                 item.Price -= (item.Price * item.Discount / 100);
 
-            return map;
+            //return map;
 
-            //throw new Exception("hata mesajı");
+            throw new System.Exception("hata mesajı");
         }
     }
 }

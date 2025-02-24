@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using SendGrid.Helpers.Errors.Model;
 using System.ComponentModel.DataAnnotations;
-using ValidationException = FluentValidation.ValidationException;
+//using ValidationException = FluentValidation.ValidationException;
 
 namespace YoutubeApi.Application.Exceptions
 {
@@ -26,17 +26,18 @@ namespace YoutubeApi.Application.Exceptions
             httpContent.Response.ContentType = "application/json";
 			httpContent.Response.StatusCode = statusCode;
 
-			if (exception.GetType() == typeof(ValidationException))
+			if (exception.GetType() == typeof(FluentValidation.ValidationException))
+			{
 				return httpContent.Response.WriteAsync(new ExceptionModel
 				{
-					Errors = ((ValidationException)exception).Errors.Select(e => e.ErrorMessage),
+					Errors = ((FluentValidation.ValidationException)exception).Errors.Select(e => e.ErrorMessage),
 					StatusCode = StatusCodes.Status400BadRequest
 				}.ToString());
+			}
 
 			List<string> errors = new()
 			{
-				$"Hata Mesajı {exception.Message}" ,
-				$"Hata Açıklaması : {exception.InnerException?.ToString()}" 
+				$"Hata Mesajı {exception.Message}" 
 			};
 
 			return httpContent.Response.WriteAsync(new ExceptionModel
@@ -52,9 +53,9 @@ namespace YoutubeApi.Application.Exceptions
 			exception switch
 			{
 
-				DirectoryNotFoundException => StatusCodes.Status400BadRequest,
-				BadRequestException => StatusCodes.Status400BadRequest,
-				ValidationException => StatusCodes.Status422UnprocessableEntity,
+                BadRequestException => StatusCodes.Status400BadRequest,
+                NotFoundException => StatusCodes.Status400BadRequest,
+                FluentValidation.ValidationException => StatusCodes.Status422UnprocessableEntity,
 				_ => StatusCodes.Status500InternalServerError
 
 			};

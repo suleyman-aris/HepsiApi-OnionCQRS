@@ -31,7 +31,18 @@ namespace YoutubeApi.Application.Beheviors
 
         public Task<TResponse> Handle(IRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var context = new ValidationContext<TRequest>((TRequest)request);
+            var fialtures = validator
+                .Select(v => v.Validate(context))
+                .SelectMany(result => result.Errors)
+                .GroupBy(x => x.ErrorMessage)
+                .Select(x => x.First())
+                .Where(f => f != null)
+                .ToList();
+
+            if (fialtures.Any())
+                throw new ValidationException(fialtures);
+            return next();
         }
     }
 }
